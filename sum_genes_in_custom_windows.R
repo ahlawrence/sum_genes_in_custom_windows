@@ -1,11 +1,20 @@
 library(dplyr)
 
-gene_number<-read.csv("yourgff3.gff3")
-gene_number%>%
-  mutate(gene_number = 1)
+gene_number<-read_tsv("yourgff3.gff3")
+
+##This code operates under the assumption that your gff3 file is named with 
+#CHROM	type	pos_start	pos_end
+
+
+#filter gff3 to just genes
+gene_number<-gene_number %>%
+  filter(type=="gene")
+#add in a 1 next to each gene for counts
+gene_number<-gene_number%>%
+  mutate(gene_count = 1)
 
 gene_number$midpoint<-((gene_number$pos_start + gene_number$pos_end)/2)
-gene_number$gene_lenght<-(gene_number$pos_end - gene_number$pos_start)
+gene_number$gene_length<-(gene_number$pos_end - gene_number$pos_start)
 
 
 sum_counts_in_range_by_chrom <- function(df_range, df_values) {
